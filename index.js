@@ -35,7 +35,7 @@ app.listen(app.get('port'), function() {
 });
 
 app.post('/sendLocation', function(request, response) {
-	db.collection('locations', function(error, coll) {
+	db.collection('locations', function(error, col) {
 		var id = col.insert(toInsert, function(error, saved) {
 			if (error) {
 				response.send(500);

@@ -34,11 +34,14 @@ app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
 
+app.get('sendLocation', function(request, reponse) {
+	response.sendFile('pages/index');
+})
+
 app.post('/sendLocation', function(request, response) {
 	db.collection('locations', function(error, col) {
 		var id = col.insert(toInsert, function(error, saved) {
 			if (error) {
-				console.log('fsads');
 				response.send(500);
 			}
 			else {

@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true}));
 
 var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/blueberry-cupcake-39701';
 var MongoClient = require('mongodb').MongoClient, format = require('util').format;
-var db = MongoClient.connect(mongoUri, function(error, databaseConnection) {]
+var db = MongoClient.connect(mongoUri, function(error, databaseConnection) {
 	db = databaseConnection;
 });
 

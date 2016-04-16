@@ -38,6 +38,7 @@ app.post('/sendLocation', function(request, response) {
 	db.collection('locations', function(error, col) {
 		var id = col.insert(toInsert, function(error, saved) {
 			if (error) {
+				console.log('fsads');
 				response.send(500);
 			}
 			else {

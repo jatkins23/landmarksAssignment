@@ -7,13 +7,69 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 
-var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/blueberry-cupcake-39701';
+var mongoUri = process.env.MONGODB_URI || process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/blueberry-cupcake-39701';
 var MongoClient = require('mongodb').MongoClient, format = require('util').format;
 var db = MongoClient.connect(mongoUri, function(error, databaseConnection) {
 	db = databaseConnection;
 });
 
-app.set('port', (process.env.PORT || 5000));
+app.use(function(req, res, next){
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	next();
+});
+
+app.post('/sendLocation', function(request, response) {
+	var login = request.body.login;
+	var lat = request.body.lat;
+	var lng = request.body.lng;
+
+	var checkinToInsert = {
+		login: login,
+		lat: parseFloat(lat),
+		lng: parseFloat(lng),
+		created_at: new Date()
+	};
+
+	if (checkinToInsert.login == undefined ||
+			checkinToInsert.lat == undefined ||
+			checkinToInsert.lng == undefined ||
+			typeof checkinToInsert.login !== "string" ||
+			checkinToInsert.lat == "" ||
+			checkinToInsert.lng == "" ||
+			isNaN(checkinToInsert.lat) ||
+			isNaN(checkinToInsert.lng))
+	{
+		response.send('{"error":"Whoops, something is wrong with your data!"}\n');
+	}
+	else {
+		db.collection('checkins', function(error, coll) {
+			var id = coll.insert(checkinToInsert, function(error, saved) {
+				if (error) {
+					response.send("fadsfaf");
+				}
+				else {
+					reponse.send("aaaaaaaa");
+				}
+			});
+		});
+	}
+	// if (login == "ALTA_ROSS" &&
+	// 		lat == 23 &&
+	// 		lng == 12) {
+	// 	response.send('{"error":"It worked!"}\n');
+	// }
+	// db.collection('locations', function(error, col) {
+	// 	var id = col.insert(toInsert, function(error, saved) {
+	// 		if (error) {
+	// 			response.send(500);
+	// 		}
+	// 		else {
+	// 			response.send(200);
+	// 		}
+	// 	});
+	// });
+});
 
 //Serve static content
 app.use(express.static(__dirname + '/public'));
@@ -38,47 +94,7 @@ app.get('sendLocation', function(request, reponse) {
 	response.sendFile('pages/index');
 })
 
-app.post('/sendLocation', function(request, response) {
-	var login = request.body.login;
-	var lat = request.body.lat;
-	var lng = request.body.lng;
-
-	var checkinToInsert = {
-		"login": login,
-		"lat": lat,
-		"lng": lng
-	};
-	// db.collection
-	// response.send
-	// db.collection('checkins', function(error, coll) {
-	// 	var id = coll.insert(checkinToInsert, function(error, saved) {
-	// 		if (error) {
-	// 			response.send(500);
-	// 		}
-	// 		else {
-	// 			reponse.send(200);
-	// 		}
-	// 	});
-	// });
-	if (login == "ALTA_ROSS" &&
-			lat == 23 &&
-			lng == 12) {
-		response.send('{"error":"It worked!"}\n');
-	}
-	response.send('{"error":"Whoops, something is wrong with your data!"}\n');
-	// db.collection('locations', function(error, col) {
-	// 	var id = col.insert(toInsert, function(error, saved) {
-	// 		if (error) {
-	// 			response.send(500);
-	// 		}
-	// 		else {
-	// 			response.send(200);
-	// 		}
-	// 	});
-	// });
-});
-
-app.set('port', (process.env.PORT || 7000));
+app.set('port', (process.env.PORT || 5000));
 app.listen(app.get('port'), function() {
 	console.log('Node app is running on port', app.get('port'));
 });

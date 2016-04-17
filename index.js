@@ -81,9 +81,30 @@ app.post('/sendLocation', function(request, response) {
 
 app.get('/checkins.json', function(request, response) {
 	var login = request.query.login;
-	db.collection('checkins', function(error, coll){
-		coll.find({"login":login}).toArray(function(error, cursor){
-			response.send(cursor);
+	db.collection('checkins', function(error, coll) {
+		coll.find({"login":login}).toArray(function(error, cursor) {
+			response.send(JSON.stringify(cursor) + "\n");
+		});
+	});
+});
+
+app.get('/', function(request, response) {
+	response.set('Content-Type', 'text/html');
+	var indexPage = '';
+	db.collection('checkins', function(error, coll) {
+		coll.find().toArray(function(err, cursor) {
+			if (!err) {
+				indexPage += "<!DOCTYPE HTML><html><head><title>Recent Check Ins</title></head><body><h1>Recent Check Ins</h1>";
+				for (var count = 0; count < cursor.length; count++) {
+					indexPage += "USER: " + cursor[count].login + " checked in at (" + cursor[count].lat;
+					indexPage += ", " + cursor[count].lng + ") on " + cursor[count].created_at + "</br>";
+				}
+				indexPage += "</body></html>";
+				response.send(indexPage);
+			}
+			else {
+				response.send('<!DOCTYPE HTML><html><head><title>Error Page</title></head><body><h1>An Error Occurred</h1></body></html>');
+			}
 		});
 	});
 });

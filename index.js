@@ -73,6 +73,17 @@ app.post('/sendLocation', function(request, response) {
 	// });
 });
 
+app.get('/checkins.json', function(request, response) {
+	var login = request.query.login;
+	var data = {};
+	db.collection('checkins', function(error, coll){
+		coll.find({"login":login}).toArray(function(error, cursor){
+			data = cursor;
+			response.send(JSON.stringify(data));
+		});
+	});
+});
+
 //Serve static content
 app.use(express.static(__dirname + '/public'));t('/lab8', function(request, response) {
 	response.sendFile(__dirname + '/public/index.html');

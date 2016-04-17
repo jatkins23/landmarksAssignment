@@ -84,11 +84,6 @@ app.get('/checkins.json', function(request, response) {
 	});
 });
 
-//Serve static content
-app.use(express.static(__dirname + '/public'));t('/lab8', function(request, response) {
-	response.sendFile(__dirname + '/public/index.html');
-});
-
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });

@@ -7,10 +7,11 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 
-var mongoUri = process.env.MONGODB_URI || process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/blueberry-cupcake-39701';
+var mongoUri = process.env.MONGODB_URI || process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/blueberry-cupcake-39701' || 'localhost:5000' || 'mongodb://heroku_smqvkgnw:7i8f8vmvqi9r4d4gjcb55s88fp@ds023560.mlab.com:23560/heroku_smqvkgnw';
 var MongoClient = require('mongodb').MongoClient, format = require('util').format;
 var db = MongoClient.connect(mongoUri, function(error, databaseConnection) {
 	db = databaseConnection;
+	db.collection('landmarks').createIndex({'geometry':"2dsphere"});
 });
 
 app.use(function(req, res, next){
@@ -43,6 +44,7 @@ app.post('/sendLocation', function(request, response) {
 		response.send('{"error":"Whoops, something is wrong with your data!"}\n');
 	}
 	else {
+		db.collection
 		db.collection('checkins', function(error, coll) {
 			var id = coll.insert(checkinToInsert, function(error, saved) {
 				if (error) {

@@ -39,6 +39,10 @@ app.get('sendLocation', function(request, reponse) {
 })
 
 app.post('/sendLocation', function(request, response) {
+	var firstParam = request.body.param1;
+	if (firstParam == "abcd") {
+		response.send('{"error":"It worked!"}');
+	}
 	response.send('{"error":"Whoops, something is wrong with your data!"}');
 	// db.collection('locations', function(error, col) {
 	// 	var id = col.insert(toInsert, function(error, saved) {

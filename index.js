@@ -50,3 +50,5 @@ app.post('/sendLocation', function(request, response) {
 		});
 	});
 });
+
+app.listen(process.env.PORT || 5000);

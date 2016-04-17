@@ -62,7 +62,7 @@ app.post('/sendLocation', function(request, response) {
 								$near:{
 									$geometry:{
 										type:"Point",
-										coordinates:[checkinToInsert.lat,checkinToInsert.lng]
+										coordinates:[checkinToInsert.lng,checkinToInsert.lat]
 									},
 									$maxDistance: 1609,
 									$minDistance: 0

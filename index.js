@@ -39,8 +39,13 @@ app.get('sendLocation', function(request, reponse) {
 })
 
 app.post('/sendLocation', function(request, response) {
-	var firstParam = request.body.param1;
-	if (firstParam == "abcd") {
+	var login = request.body.login;
+	var lat = request.body.lat;
+	var lng = request.body.lng;
+
+	if (login == "ALTA_ROSS" &&
+			lat == 23 &&
+			lng == 12) {
 		response.send('{"error":"It worked!"}\n');
 	}
 	response.send('{"error":"Whoops, something is wrong with your data!"}\n');

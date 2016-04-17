@@ -51,5 +51,7 @@ app.post('/sendLocation', function(request, response) {
 		});
 	});
 });
-
-app.listen(process.env.PORT || 5000);
+app.set('port', (process.enc.PORT || 5000));
+app.listen(app.get('port'), function() {
+	console.log('Node app is running on port', app.get('port'));
+});

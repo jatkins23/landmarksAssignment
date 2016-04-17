@@ -48,6 +48,8 @@ app.post('/sendLocation', function(request, response) {
 		"lat": lat,
 		"lng": lng
 	};
+	// db.collection
+	// response.send
 	// db.collection('checkins', function(error, coll) {
 	// 	var id = coll.insert(checkinToInsert, function(error, saved) {
 	// 		if (error) {
@@ -75,7 +77,8 @@ app.post('/sendLocation', function(request, response) {
 	// 	});
 	// });
 });
-// app.set('port', (process.env.PORT || 5000));
-// app.listen(app.get('port'), function() {
-// 	console.log('Node app is running on port', app.get('port'));
-// });
+
+app.set('port', (process.env.PORT || 7000));
+app.listen(app.get('port'), function() {
+	console.log('Node app is running on port', app.get('port'));
+});

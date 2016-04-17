@@ -7,11 +7,11 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 
-var mongoUri = process.env.MONGODB_URI || process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/app';
+var mongoUri = process.env.MONGODB_URI || process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/test';
 var MongoClient = require('mongodb').MongoClient, format = require('util').format;
 var db = MongoClient.connect(mongoUri, function(error, databaseConnection) {
 	db = databaseConnection;
-	// db.collection('landmarks').createIndex({'geometry':"2dsphere"});
+	db.collection('landmarks').createIndex({'geometry':"2dsphere"});
 });
 
 app.use(function(req, res, next){
@@ -44,42 +44,46 @@ app.post('/sendLocation', function(request, response) {
 		response.send('{"error":"Whoops, something is wrong with your data!"}\n');
 	}
 	else {
-		db.collection
 		db.collection('checkins', function(error, coll) {
 			var id = coll.insert(checkinToInsert, function(error, saved) {
 				if (error) {
-					response.send("error");
+					response.send(500);
 				}
 				else {
-					response.send("success");
+					var responseJSON = {
+						"landmarks":[],
+						"people":[]
+					};
+
+					coll.find().toArray(function(err, cursor) {
+						responseJSON.people = cursor;
+						db.collection('landmarks').find({
+							geometry:{
+								$near:{
+									$geometry:{
+										type:"Point",
+										coordinates:[checkinToInsert.lat,checkinToInsert.lng]
+									},
+									$maxDistance: 1609,
+									$minDistance: 0
+								}
+							}
+						}).toArray(function(err, c) {
+							responseJSON = c;
+							response.send(JSON.stringify(responseJSON) + '\n');
+						});
+					});
 				}
 			});
 		});
 	}
-	// if (login == "ALTA_ROSS" &&
-	// 		lat == 23 &&
-	// 		lng == 12) {
-	// 	response.send('{"error":"It worked!"}\n');
-	// }
-	// db.collection('locations', function(error, col) {
-	// 	var id = col.insert(toInsert, function(error, saved) {
-	// 		if (error) {
-	// 			response.send(500);
-	// 		}
-	// 		else {
-	// 			response.send(200);
-	// 		}
-	// 	});
-	// });
 });
 
 app.get('/checkins.json', function(request, response) {
 	var login = request.query.login;
-	var data = {};
 	db.collection('checkins', function(error, coll){
 		coll.find({"login":login}).toArray(function(error, cursor){
-			data = cursor;
-			response.send(JSON.stringify(data));
+			response.send(cursor);
 		});
 	});
 });

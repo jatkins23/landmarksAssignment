@@ -74,17 +74,7 @@ app.post('/sendLocation', function(request, response) {
 });
 
 //Serve static content
-app.use(express.static(__dirname + '/public'));
-
-// views is directory for all template files
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-
-app.get('/', function(request, response) {
-  response.render('pages/index');
-});
-
-app.get('/lab8', function(request, response) {
+app.use(express.static(__dirname + '/public'));t('/lab8', function(request, response) {
 	response.sendFile(__dirname + '/public/index.html');
 });
 

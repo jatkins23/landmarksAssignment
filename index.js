@@ -39,17 +39,17 @@ app.get('sendLocation', function(request, reponse) {
 })
 
 app.post('/sendLocation', function(request, response) {
-	response.send('{"error":"Whoops, something is wrong with your data!"}');
-	// db.collection('locations', function(error, col) {
-	// 	var id = col.insert(toInsert, function(error, saved) {
-	// 		if (error) {
-	// 			response.send(500);
-	// 		}
-	// 		else {
-	// 			response.send(200);
-	// 		}
-	// 	});
-	// });
+	//response.send('{"error":"Whoops, something is wrong with your data!"}');
+	db.collection('locations', function(error, col) {
+		var id = col.insert(toInsert, function(error, saved) {
+			if (error) {
+				response.send(500);
+			}
+			else {
+				response.send(200);
+			}
+		});
+	});
 });
 
 app.listen(process.env.PORT || 5000);

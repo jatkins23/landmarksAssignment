@@ -48,22 +48,22 @@ app.post('/sendLocation', function(request, response) {
 		"lat": lat,
 		"lng": lng
 	};
-	db.collection('checkins', function(error, coll) {
-		var id = coll.insert(checkinToInsert, function(error, saved) {
-			if (error) {
-				response.send(500);
-			}
-			else {
-				reponse.send(200);
-			}
-		});
-	});
-	// if (login == "ALTA_ROSS" &&
-	// 		lat == 23 &&
-	// 		lng == 12) {
-	// 	response.send('{"error":"It worked!"}\n');
-	// }
-	// response.send('{"error":"Whoops, something is wrong with your data!"}\n');
+	// db.collection('checkins', function(error, coll) {
+	// 	var id = coll.insert(checkinToInsert, function(error, saved) {
+	// 		if (error) {
+	// 			response.send(500);
+	// 		}
+	// 		else {
+	// 			reponse.send(200);
+	// 		}
+	// 	});
+	// });
+	if (login == "ALTA_ROSS" &&
+			lat == 23 &&
+			lng == 12) {
+		response.send('{"error":"It worked!"}\n');
+	}
+	response.send('{"error":"Whoops, something is wrong with your data!"}\n');
 	// db.collection('locations', function(error, col) {
 	// 	var id = col.insert(toInsert, function(error, saved) {
 	// 		if (error) {

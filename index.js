@@ -11,7 +11,7 @@ var mongoUri = process.env.MONGODB_URI || process.env.MONGOLAB_URI || process.en
 var MongoClient = require('mongodb').MongoClient, format = require('util').format;
 var db = MongoClient.connect(mongoUri, function(error, databaseConnection) {
 	db = databaseConnection;
-	db.collection('landmarks').createIndex({'geometry':"2dsphere"});
+	// db.collection('landmarks').createIndex({'geometry':"2dsphere"});
 });
 
 app.use(function(req, res, next){
@@ -48,10 +48,10 @@ app.post('/sendLocation', function(request, response) {
 		db.collection('checkins', function(error, coll) {
 			var id = coll.insert(checkinToInsert, function(error, saved) {
 				if (error) {
-					response.send("fadsfaf");
+					response.send("error");
 				}
 				else {
-					reponse.send("aaaaaaaa");
+					reponse.send("success");
 				}
 			});
 		});
